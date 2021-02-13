@@ -1,0 +1,54 @@
+.metadeFundoEsquerda {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+h1{
+  font-size: 2rem;
+}
+.ColunaEsquerda {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  width: 30vw;
+}
+#voltar{
+  position: absolute;
+  margin-left: 5px;
+  margin-top: 40vh;
+  align-self: center;
+  height: 70px;
+  background-color: chocolate;
+  color: aliceblue;
+}
+.container2 {
+  width: 70vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000;
+}
+select {
+  font-size: 20px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+ 
+}
+#content{
+  display: none;
+  padding-top: 5%;
+  justify-content: stretch;
+  align-items: flex-start;
+  height: 70vh;
+}
+body {
+  margin-left: 0%;
+  margin-top: 0%;
+  margin-bottom: 0%;
+  margin-right: 0%;
+}
+button{
+  margin-top: 20px;
+  font-size: 20px;
+}

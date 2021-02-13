@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Top-Secret</title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.4/demo.css">
+    <script type="text/javascript" async="" src="https://www.google-analytics.com/analytics.js"></script>
+    <link rel="stylesheet" href="../main/style.css" />
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-132699580-1');
+    </script>
+    <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js" async=""></script>
+
+  </head>
+  <body>
+    <div class="metadeFundoEsquerda">
+      <div class="ColunaEsquerda">
+        <h1>Selecione o Filme</h1>
+        <button id="voltar"
+          onclick="window.location.href='http://francoscorp.sytes.net/HomeFilmes/homeFilmes.html'"><</button>
+        <select id="select" class="select">
+          <option value="none">-Selecione-</option>
+          <option value="Matrix">Matrix</option>
+          <option value="Matrix-Reaload">Matrix-Reaload</option>
+          <option value="Matrix-Revolution">Matrix-Revolution</option>
+        </select>
+
+        <div id="content">
+          <div id="Matrix" class="data">
+            <button
+              onclick="setSrc('http://francoscorp.sytes.net/Videos/Filmes_Series/Trilogia Matrix/Matrix/Matrix.mp4','http://francoscorp.sytes.net/Videos/Filmes_Series/Trilogia Matrix/Matrix/Matrix.vtt')"
+            >
+            Matrix
+            </button>
+          </div>
+          <div id="Matrix-Reaload" class="data">
+            <button
+              onclick="setSrc('../Videos/Filmes_Series/Trilogia Matrix/Matrix Reloaded/Matrix-Reloaded.mp4','../Videos/Filmes_Series/Trilogia Matrix/Matrix Reloaded/Matrix-Reloaded.vtt')"
+            >
+            Matrix-Reaload
+            </button>
+          </div>
+          <div id="Matrix-Revolution" class="data">
+            <button
+              onclick="setSrc('../Videos/Filmes_Series/Trilogia Matrix/Matrix Revolutions/Matrix-Revolutions.mp4','../Videos/Filmes_Series/Trilogia Matrix/Matrix Revolutions/Matrix-Revolutions.vtt')"
+            >
+            Matrix-Revolution
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="container2">
+          <video controls crossorigin playsinline id="player"
+              data-poster="../images/Culture_Matrix_Code_corridor.jpg"
+              src="../images/Culture_Matrix_Code_corridor.jpg"
+              type="video/mp4"
+              size="720">
+            <track
+              id="legenda"
+              kind="captions"
+              label="Portugues"
+              srclang="PT"
+              src=""
+              default
+            />
+            </video>
+        </div>
+        </div>
+    <script src="https://cdn.plyr.io/3.6.4/demo.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../main/script.js"></script>
+  </body>
+</html>
