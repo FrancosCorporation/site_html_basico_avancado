@@ -1,0 +1,15 @@
+# sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# logs
+*.log
+
+# IDE
+.idea/
+*.suo
+*.user
+
+# npm (não usado no site, previne lixo se surgir)
+node_modules/
