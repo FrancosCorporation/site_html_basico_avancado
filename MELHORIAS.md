@@ -1,7 +1,7 @@
 # MELHORIAS — site_html_basico_avancado
 
 > Revisado em 2026-10-11 · HTML/CSS/JavaScript estático · branch `master` · sem build.
-> Implementação concluída para SEC-01/02, BUG-01/02/03, UX-01, DOC-01 e IMP-01.
+> Implementação concluída para SEC-01/02/03, BUG-01/02/03, UX-01, DOC-01 e IMP-01.
 > TEST-01 e DEVOPS-01 continuam pendentes.
 
 ## 0. Como usar este documento
@@ -23,6 +23,7 @@ As páginas de Hannibal e Matrix ainda dependem das URLs de mídia externas grav
 |---|---|---:|---|---|
 | SEC-01 | Remover shims IE de CDN legado | P1 | `index.html` | Concluído |
 | SEC-02 | Remover bibliotecas antigas sem uso | P2 | `assets/`, `bootstrap/` | Concluído após retirar referências |
+| SEC-03 | Limitar o servidor HTTP local ao loopback | P2 | `Readme.md` | Concluído |
 | BUG-01 | Remover configuração TypeScript órfã | P2 | `tsconfig.json` | Concluído |
 | BUG-02 | Preservar caminho na regra Apache | P2 | `usaremcasode80-443.htaccess` | Concluído |
 | BUG-03 | Corrigir seleção e carregamento dos players | P2 | `main/script.js`, páginas de título | Concluído |
@@ -49,6 +50,15 @@ As páginas de Hannibal e Matrix ainda dependem das URLs de mídia externas grav
 - **Mudança:** removido o bundle antigo após substituir a landing e usar controles nativos de vídeo.
 - **Aceite:** HTML, CSS e JavaScript não referenciam o bundle removido.
 - **Verificação:** `rg -n 'assets/|bootstrap/|jquery\.min|holder|masonry|magnific|odometer|pushy|wow' --glob '*.{html,css,js}' .` não encontra referências.
+
+### SEC-03 · Servidor HTTP local escutava em todas as interfaces · [P2] — concluído
+
+- **Arquivo:** `Readme.md:10`.
+- **Evidência:** o comando documentado `python3 -m http.server 8000` não restringia o bind ao loopback.
+- **Impacto:** a prévia estática poderia aceitar conexões de outros dispositivos na rede local.
+- **Mudança:** o comando agora inclui `--bind 127.0.0.1`.
+- **Aceite:** o servidor documentado escuta apenas na máquina local.
+- **Verificação:** conferir `python3 -m http.server --bind 127.0.0.1 8000` na seção “Abrir o site”.
 
 ## 4. Bugs e experiência de uso
 
@@ -144,6 +154,7 @@ As páginas de Hannibal e Matrix ainda dependem das URLs de mídia externas grav
 
 - [x] SEC-01 — shims de CDN removidos.
 - [x] SEC-02 — bibliotecas sem uso removidas após revisão das referências.
+- [x] SEC-03 — servidor HTTP documentado limitado ao loopback.
 - [x] BUG-01 — `tsconfig.json` removido.
 - [x] BUG-02 — redirecionamento preserva o caminho.
 - [x] BUG-03 — lista e player corrigidos.

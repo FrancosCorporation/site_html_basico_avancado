@@ -7,7 +7,7 @@ Coleção de páginas responsivas em HTML, CSS e JavaScript, sem etapa de build 
 Sirva a pasta raiz com um servidor HTTP local:
 
 ```bash
-python3 -m http.server 8000
+python3 -m http.server --bind 127.0.0.1 8000
 ```
 
 Depois, abra `http://localhost:8000`. Para testar o player local, acesse `/video.html` e escolha um arquivo de vídeo. Alguns navegadores restringem recursos quando a página é aberta diretamente como `file://`.
