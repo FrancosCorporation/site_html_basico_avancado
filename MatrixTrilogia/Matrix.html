@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
   <head>
-    <meta charset="UTF-8" />
-    <title>Top-Secret</title>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.4/demo.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Escolha um filme da trilogia Matrix para carregar no player." />
+    <title>Trilogia Matrix | Francos Corporation</title>
     <script type="text/javascript" async="" src="https://www.google-analytics.com/analytics.js"></script>
     <link rel="stylesheet" href="../main/style.css" />
     <script>
@@ -14,23 +15,21 @@
       gtag('js', new Date());
       gtag('config', 'UA-132699580-1');
     </script>
-    <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js" async=""></script>
-
   </head>
   <body>
     <div class="metadeFundoEsquerda">
       <div class="ColunaEsquerda">
-        <h1>Selecione o Filme</h1>
-        <button id="voltar"
-          onclick="window.location.href='http://francoscorp.sytes.net/HomeFilmes/homeFilmes.html'"><</button>
-        <select id="select" class="select">
-          <option value="none">-Selecione-</option>
+        <a id="voltar" href="../HomeFilmes/homeFilmes.html">← Voltar para filmes e séries</a>
+        <h1>Trilogia Matrix</h1>
+        <label for="select">Escolha um filme</label>
+        <select id="select" class="select" aria-controls="content">
+          <option value="none">Selecione um filme</option>
           <option value="Matrix">Matrix</option>
-          <option value="Matrix-Reaload">Matrix-Reaload</option>
-          <option value="Matrix-Revolution">Matrix-Revolution</option>
+          <option value="Matrix-Reloaded">Matrix Reloaded</option>
+          <option value="Matrix-Revolutions">Matrix Revolutions</option>
         </select>
 
-        <div id="content">
+        <div id="content" hidden>
           <div id="Matrix" class="data">
             <button
               onclick="setSrc('http://francoscorp.sytes.net/Videos/Filmes_Series/Trilogia Matrix/Matrix/Matrix.mp4','http://francoscorp.sytes.net/Videos/Filmes_Series/Trilogia Matrix/Matrix/Matrix.vtt')"
@@ -38,41 +37,29 @@
             Matrix
             </button>
           </div>
-          <div id="Matrix-Reaload" class="data">
+          <div id="Matrix-Reloaded" class="data" hidden>
             <button
               onclick="setSrc('../Videos/Filmes_Series/Trilogia Matrix/Matrix Reloaded/Matrix-Reloaded.mp4','../Videos/Filmes_Series/Trilogia Matrix/Matrix Reloaded/Matrix-Reloaded.vtt')"
             >
-            Matrix-Reaload
+            Matrix Reloaded
             </button>
           </div>
-          <div id="Matrix-Revolution" class="data">
+          <div id="Matrix-Revolutions" class="data" hidden>
             <button
               onclick="setSrc('../Videos/Filmes_Series/Trilogia Matrix/Matrix Revolutions/Matrix-Revolutions.mp4','../Videos/Filmes_Series/Trilogia Matrix/Matrix Revolutions/Matrix-Revolutions.vtt')"
             >
-            Matrix-Revolution
+            Matrix Revolutions
             </button>
           </div>
         </div>
       </div>
       <div class="container2">
-          <video controls crossorigin playsinline id="player"
-              data-poster="../images/Culture_Matrix_Code_corridor.jpg"
-              src="../images/Culture_Matrix_Code_corridor.jpg"
-              type="video/mp4"
-              size="720">
-            <track
-              id="legenda"
-              kind="captions"
-              label="Portugues"
-              srclang="PT"
-              src=""
-              default
-            />
-            </video>
-        </div>
-        </div>
-    <script src="https://cdn.plyr.io/3.6.4/demo.js" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <p id="player-status" aria-live="polite">Escolha um filme para carregar o vídeo.</p>
+        <video controls playsinline preload="metadata" id="player" poster="../images/Culture_Matrix_Code_corridor.jpg" aria-label="Player de vídeo da trilogia Matrix">
+          <track id="legenda" kind="captions" label="Português" srclang="pt-BR" />
+        </video>
+      </div>
+    </div>
     <script src="../main/script.js"></script>
   </body>
 </html>

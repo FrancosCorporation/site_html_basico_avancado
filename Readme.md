@@ -1,89 +1,59 @@
-# site_html_basico_avancado
+# Francos Corporation — site estático
 
-## 🐳 Instalação e Execução (Docker) — recomendado
+Coleção de páginas responsivas em HTML, CSS e JavaScript, sem etapa de build ou dependências npm. O catálogo reúne páginas de Hannibal e da trilogia Matrix; o player genérico reproduz um vídeo escolhido no dispositivo, sem fazer upload.
 
-### Pré-requisitos
-- [Docker](https://docs.docker.com/get-docker/) + Docker Compose
+## Abrir o site
 
-### Rodar com Docker
-```bash
-docker compose up --build
-```
-Para servir via container:
-```bash
-docker run --rm -p 8080:80 -v $(pwd):/usr/share/nginx/html:ro nginx:alpine
-```
-
-### Sem Docker (local)
-```bash
-# abre o index.html no navegador
-open index.html
-```
-
-**Projeto de estudo** de HTML e CSS — site estático com páginas temáticas de filmes e um player de vídeo customizado, desenvolvido em fevereiro de 2021.
-
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-3-7952B3?style=flat&logo=bootstrap&logoColor=white)
-![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-green)
-![Status](https://img.shields.io/badge/status-projeto%20de%20estudo-blue)
-
-## Sobre
-
-Exercício de front-end estático feito para praticar HTML, CSS, Bootstrap 3 e plugins jQuery: monta uma "Francos Corporation" com menu lateral deslizante, seções animadas, páginas de filmes (Hannibal, Matrix, HomeFilmes) e um player de vídeo com a biblioteca Plyr. Não há back-end nem build obrigatório — é uma coleção de páginas abertas direto no navegador.
-
-## Funcionalidades
-
-Comprovadas pelos arquivos versionados:
-
-- `index.html` — landing com jumbotron, logo, menu lateral "pushy" e botões para a página de filmes e WhatsApp;
-- `HomeFilmes/homeFilmes.html`, `Hannibal/Hannibal.html` e `MatrixTrilogia/Matrix.html` — páginas temáticas com CSS próprio;
-- `video.html` — player de vídeo usando [Plyr](https://plyr.io/) via CDN (o `<source>` está vazio e deve ser apontado para o arquivo `.mp4` desejado);
-- `assets/` — jQuery e plugins de UI (Pushy, Masonry, Magnific Popup, WOW/Animate, Odometer) com os respectivos CSS;
-- `usaremcasode80-443.htaccess` — regra de rewrite para forçar HTTPS no host `francoscorp.sytes.net`;
-- `tsconfig.json` — configuração usada para compilar `main/script.js` a partir de TypeScript.
-
-## Stack
-
-- **HTML5** e **CSS3** puros
-- **Bootstrap 3** local (`bootstrap/`)
-- **jQuery** + plugins: Pushy, Masonry, Magnific Popup, WOW/Animate.css, Odometer
-- **Plyr** (player de vídeo via CDN)
-- Fontes e ícones via CDN (Google Fonts, Typicons, Font Awesome) e snippet do Google Analytics
-
-## Como rodar
-
-Não requer build. Basta abrir o `index.html` no navegador ou servir a pasta:
+Sirva a pasta raiz com um servidor HTTP local:
 
 ```bash
 python3 -m http.server 8000
-# depois acesse http://localhost:8000
 ```
 
-Para o player de vídeo, edite `video.html` e informe o caminho do `.mp4` em `<source src="...">`. A página referencia um `back.css` que não está versionado — o visual principal vem do CSS do Plyr (CDN).
+Depois, abra `http://localhost:8000`. Para testar o player local, acesse `/video.html` e escolha um arquivo de vídeo. Alguns navegadores restringem recursos quando a página é aberta diretamente como `file://`.
 
-## Estrutura do projeto
+## Páginas
 
-```
+| Página | O que oferece |
+|---|---|
+| `index.html` | Página inicial, catálogo e contato pelo WhatsApp |
+| `HomeFilmes/homeFilmes.html` | Seleção de Hannibal ou trilogia Matrix |
+| `Hannibal/Hannibal.html` | Seleção de temporada e episódio com controles nativos de vídeo |
+| `MatrixTrilogia/Matrix.html` | Seleção de filme, player nativo e suporte a legendas VTT |
+| `video.html` | Player para um arquivo de vídeo local |
+
+## Arquivos principais
+
+```text
 .
-├── index.html                 # landing page
-├── video.html                 # player de vídeo (Plyr)
-├── styleindex.css             # estilos da landing
-├── Hannibal/                  # página temática
-├── HomeFilmes/                # página temática + css
-├── MatrixTrilogia/            # página temática
-├── main/                      # script.js + style.css de apoio
-├── assets/                    # jQuery, plugins e CSS de terceiros
-├── bootstrap/                 # Bootstrap 3 local (css, js, fonts)
-├── images/                    # imagens usadas nas páginas
-└── usaremcasode80-443.htaccess
+├── index.html                 # início e navegação
+├── styleindex.css             # estilos da página inicial
+├── HomeFilmes/
+│   ├── homeFilmes.html        # catálogo
+│   └── sss.css                # estilos do catálogo
+├── Hannibal/Hannibal.html     # seleção de episódios
+├── MatrixTrilogia/Matrix.html # seleção de filmes
+├── main/
+│   ├── script.js              # seleção de títulos e fontes do player
+│   └── style.css              # estilos dos players de títulos
+├── video.html                # player para arquivo local
+├── video-player.js           # seleção e ciclo de vida do arquivo local
+├── video.css                 # estilos do player genérico
+├── images/                   # logo e imagens de capa
+└── usaremcasode80-443.htaccess # exemplo de redirecionamento Apache
 ```
 
-## Observações
+## Mídia do catálogo
 
-- Páginas de estudo, sem acessibilidade/responsividade revisadas a fundo.
-- O `index.html` contém um link de WhatsApp com número pessoal e um ID antigo do Google Analytics (`UA-34344036-1`); se o site for publicado, vale revisar esses dados.
+Os vídeos não estão versionados neste repositório. As páginas de Hannibal e Matrix apontam para arquivos no servidor de mídia configurado no HTML; atualize esses caminhos se o domínio ou a localização dos arquivos mudar. A página `video.html` é independente e usa o arquivo selecionado no navegador.
+
+`usaremcasode80-443.htaccess` é um exemplo e não é carregado pelo Apache com esse nome. Ajuste o domínio de destino antes de renomeá-lo para `.htaccess` em um servidor.
+
+## Revisão antes de publicar
+
+- O link do WhatsApp contém um número de telefone público; confirme que continua sendo o contato correto.
+- O código ainda contém identificadores legados do Google Analytics; confirme a configuração de privacidade e medição antes de publicar.
 
 ## Licença
 
-MIT — veja [LICENSE](LICENSE).
+MIT — consulte [LICENSE](LICENSE).

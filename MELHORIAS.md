@@ -1,237 +1,154 @@
 # MELHORIAS — site_html_basico_avancado
 
-> **Gerado por análise de código em 2026-10-05** · Stack: HTML/CSS/JS estático (era 2014-2015) · sem build · sem package.json
-> Branch `main` · jQuery local 1.11.3 + Bootstrap 3.3.5 vendored (ambos não referenciados) · sem testes · sem CI
->
-> **Este arquivo é um plano de execução.** Cada item tem ID, `arquivo:linha`, mudança exata, critério de aceite e comando de verificação.
-
----
+> Revisado em 2026-10-11 · HTML/CSS/JavaScript estático · branch `master` · sem build.
+> Implementação concluída para SEC-01/02, BUG-01/02/03, UX-01, DOC-01 e IMP-01.
+> TEST-01 e DEVOPS-01 continuam pendentes.
 
 ## 0. Como usar este documento
 
-1. Execute na ordem **P0 → P1 → P2 → P3**, respeitando as ondas da §8.
-2. Ao terminar um item: marque `- [x]`, rode o **Verificação**, comite `fix(<ID>): descrição`.
-3. **Site estático é legítimo** — não migrar para framework (§9). As decisões são: CDN morto, libs mortas/atualizadas, `.htaccess`.
-4. **Idioma:** português.
-
----
+1. Siga P0 → P1 → P2 → P3.
+2. Ao concluir um item, marque o estado e registre o commit.
+3. O projeto permanece estático, sem framework ou etapa de build.
+4. O conteúdo das mídias de Hannibal e Matrix não está neste repositório.
 
 ## 1. Diagnóstico executivo
 
-Coleção de páginas estáticas (index, Hannibal, HomeFilmes, Matrix, video) com assets vendored (jQuery 1.11.3, Bootstrap 3.3.5, masonry, magnific-popup, holder, shims IE) e GA inline.
+O repositório contém a página inicial, o catálogo, páginas de seleção de Hannibal e Matrix e um player genérico. As páginas agora usam CSS próprio e controles nativos de vídeo. O player genérico seleciona um arquivo do dispositivo e não o envia a um servidor.
 
-**O que está bem (não regredir):**
-
-| Item | Evidência |
-|---|---|
-| Sem servidor/back-end (superfície zero) | sem package.json/rotas |
-| `.gitignore`, LICENSE, README | raiz |
-| Páginas usam jQuery de CDN atualizado (3.5.1) | `Hannibal/Hannibal.html:247` |
-
-**O que está quebrado:**
-
-1. **CDN morto em produção:** `index.html:17-18` carrega `html5shiv`/`respond` de `oss.maxcdn.com` — serviço **desligado em 2018**; requests penduram ou 404 (e domínio morto é risco de sequestro DNS).
-2. **Bibliotecas órfãs versionadas:** `assets/js/jquery.min.js` **v1.11.3** (2015, CVE-2015-9251/2019-11358/2020-11022) e `bootstrap/` **v3.3.5** (2015) — grep por referência nas páginas = **vazio** (jQuery local e Bootstrap não são carregados por nenhuma `.html`).
-3. `tsconfig.json` órfão: não há **nenhum arquivo `.ts`** no projeto (`find -name '*.ts'` vazio); `out` nem é opção válida (é `outDir`).
-4. `usaremcasode80-443.htaccess` redireciona **tudo** de :80 para `https://francoscorp.sytes.net/` (domínio hardcoded, sem HSTS, mata URLs internas).
-
----
+As páginas de Hannibal e Matrix ainda dependem das URLs de mídia externas gravadas nelas. A configuração legada do Google Analytics e o número do WhatsApp foram preservados para revisão do responsável pelo site.
 
 ## 2. Tabela de prioridades
 
-| ID | Título | Sev | Arquivo | Depende de |
-|---|---|---|---|---|
-| SEC-01 | CDN morto `oss.maxcdn.com` (html5shiv/respond) | **P1** | `index.html:17-18` | — |
-| SEC-02 | jQuery 1.11.3 + Bootstrap 3.3.5 (2015) vendored, não referenciados | **P2** | `assets/js/jquery.min.js`, `bootstrap/` | — |
-| BUG-01 | `tsconfig.json` órfão (sem `.ts`; opção `out` inválida) | **P2** | `tsconfig.json` | — |
-| BUG-02 | `.htaccess` redireciona tudo para domínio hardcoded | **P2** | `usaremcasode80-443.htaccess` | — |
-| TEST-01 | Sem validação de HTML/links | **P2** | *(ausente)* | — |
-| DEVOPS-01 | Sem CI | **P2** | *(ausente)* `.github/workflows/` | — |
-| DOC-01 | README — inventário do que existe e do que é órfão | **P3** | `Readme.md` | — |
-| IMP-01 | shims IE e holder.js em produção | **P3** | `index.html`, `assets/js/` | SEC-01 |
-
----
+| ID | Título | Sev | Arquivo | Estado |
+|---|---|---:|---|---|
+| SEC-01 | Remover shims IE de CDN legado | P1 | `index.html` | Concluído |
+| SEC-02 | Remover bibliotecas antigas sem uso | P2 | `assets/`, `bootstrap/` | Concluído após retirar referências |
+| BUG-01 | Remover configuração TypeScript órfã | P2 | `tsconfig.json` | Concluído |
+| BUG-02 | Preservar caminho na regra Apache | P2 | `usaremcasode80-443.htaccess` | Concluído |
+| BUG-03 | Corrigir seleção e carregamento dos players | P2 | `main/script.js`, páginas de título | Concluído |
+| UX-01 | Tornar o player genérico utilizável | P2 | `video.html`, `video-player.js`, `video.css` | Concluído |
+| TEST-01 | Validar HTML e links | P2 | — | Pendente |
+| DEVOPS-01 | Adicionar CI | P2 | `.github/workflows/` | Pendente |
+| DOC-01 | Atualizar inventário e instruções | P3 | `Readme.md` | Concluído |
+| IMP-01 | Remover shims e plugins sem uso | P3 | `assets/`, `bootstrap/` | Concluído |
 
 ## 3. Segurança
 
-### SEC-01 · CDN morto `oss.maxcdn.com` em `index.html` · [P1]
+### SEC-01 · Shims IE de CDN legado · [P1] — concluído
 
-- **Arquivo:** `index.html:17-18`
-- **Evidência:**
-  ```html
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  ```
-  O CDN OSS da MaxCDN foi **desligado em 2018**. Em 2026 essas URLs não servem nada útil.
-- **Impacto:** (a) requests que penduram agradam a page load; (b) domínio abandonado pode ser **registrado/seqüestrado** — se alguém servir JS por ali, ele executa no contexto do site (risco de supply-chain póstumo); (c) os shims são só para IE<9, público ~zero.
-- **Mudança:** **remover as duas tags** (IE<9 não é alvo em 2026) — ou, se quiser preservar, copiar os arquivos para `assets/js/` locais.
-- **Aceite:** nenhuma referência a `oss.maxcdn.com` no repo.
-- **Verificação:**
-  ```bash
-  grep -rn 'oss.maxcdn' . --include='*.html' || echo OK
-  ```
+- **Arquivo:** `index.html` (antigas linhas 17–18)
+- **Evidência:** a versão anterior carregava `html5shiv` e `respond` de `oss.maxcdn.com`.
+- **Mudança:** removidas as tags junto com a navegação antiga baseada em um template que as exigia.
+- **Aceite:** nenhum HTML aponta para `oss.maxcdn.com`.
+- **Verificação:** `rg -n 'oss\.maxcdn\.com' --glob '*.html' .` não encontra referências.
 
-### SEC-02 · jQuery 1.11.3 e Bootstrap 3.3.5 (2015) — vendored e órfãos · [P2]
+### SEC-02 · Bibliotecas antigas sem uso · [P2] — concluído
 
-- **Arquivo:** `assets/js/jquery.min.js`, `bootstrap/css/bootstrap.css`, `bootstrap/js/`
-- **Evidência:** cabeçalho `jQuery v1.11.3` (2015) e `Bootstrap v3.3.5` (2015). Grep por `assets/js/jquery` e `css/bootstrap` em todas as `.html` = **zero referências**. As páginas que usam jQuery carregam **3.5.1 via Google CDN** (`Hannibal.html:247`, `Matrix.html`).
-- **Impacto:** bibliotecas com CVEs conhecidas (XSS em `html()`/`ajax`, prototype pollution) **moram no repo** convidando alguém a referenciá-las num HTML novo; confundem manutenção (duas versões de jQuery no mesmo site).
-- **Mudança:** **apagar** `assets/js/jquery.min.js` e `bootstrap/` (confirmado sem referência); se algum uso aparecer num grep futuro, atualizar para 3.7.x em vez de ressuscitar a 1.11.3.
-- **Aceite:** árvore sem as libs mortas; site continua idêntico (era órfã).
-- **Verificação:**
-  ```bash
-  grep -rn 'assets/js/jquery\|bootstrap/css' . --include='*.html' || echo "sem referencia"
-  ls assets/js/jquery.min.js bootstrap/ 2>/dev/null || echo "removidas"
-  ```
+- **Arquivo:** antigos `assets/js/jquery.min.js`, `bootstrap/` e plugins em `assets/`
+- **Evidência:** a landing e os players foram revisados; não há referências remanescentes às bibliotecas.
+- **Mudança:** removido o bundle antigo após substituir a landing e usar controles nativos de vídeo.
+- **Aceite:** HTML, CSS e JavaScript não referenciam o bundle removido.
+- **Verificação:** `rg -n 'assets/|bootstrap/|jquery\.min|holder|masonry|magnific|odometer|pushy|wow' --glob '*.{html,css,js}' .` não encontra referências.
 
----
+## 4. Bugs e experiência de uso
 
-## 4. Bugs e defeitos funcionais
-
-### BUG-01 · `tsconfig.json` órfão · [P2]
+### BUG-01 · Configuração TypeScript órfã · [P2] — concluído
 
 - **Arquivo:** `tsconfig.json`
-- **Evidência:** `find . -name '*.ts'` → **nenhum arquivo**; config usa `"out": "js/script.js"` (opção inexistente — o correto é `outDir`); `watch: true` não é opção de compilerOptions.
-- **Impacto:** quem tentar `tsc` recebe erro; arquiteto sugere build TS que não existe (o `main/script.js` é JS puro).
-- **Mudança:** remover o arquivo (não há TS) — ou, se o intenção era migrar `main/script.js` para TS, abrir item de feature à parte.
-- **Aceite:** sem `tsconfig.json` órfão (ou com build TS real documentado).
-- **Verificação:**
-  ```bash
-  find . -name '*.ts' -not -path './.vscode/*' | wc -l   # 0 ⇒ remover tsconfig
-  ```
+- **Evidência:** não havia arquivos TypeScript; a configuração tinha opções inválidas para `compilerOptions`.
+- **Mudança:** removido o arquivo sem uso.
+- **Aceite:** não há configuração TypeScript sem código TypeScript correspondente.
+- **Verificação:** `find . -name '*.ts' -not -path './.git/*'` não encontra arquivos.
 
-### BUG-02 · `.htaccess` redireciona tudo para domínio hardcoded · [P2]
+### BUG-02 · Regra Apache descartava o caminho · [P2] — concluído
 
-- **Arquivo:** `usaremcasode80-443.htaccess`
-- **Evidência:**
-  ```apache
-  RewriteCond %{SERVER_PORT} 80
-  RewriteRule ^(.*)$ https://francoscorp.sytes.net/ [R,L]
-  ```
-  (1) destino é a **home do domínio**, não a URL pedida (`$1` é descartado) — `/Hannibal/` em :80 vira a home; (2) domínio `sytes.net` hardcoded — servir sob outro host quebra/move tráfego; (3) sem HSTS (a regra manda para HTTPS mas nada força HTTPS nas visitas seguintes).
-- **Impacto:** perda de URLs (redirect para home), acoplamento a um host específico.
-- **Mudança:** `RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]` + `Header always set Strict-Transport-Security` — ou remover o arquivo se não estiver em uso (o nome sugere "exemplo"; verificar se o servidor Apache de produção o lê).
-- **Aceite:** `/qualquer` em :80 → `https://<host>/qualquer` (mantém path).
-- **Verificação:**
-  ```bash
-  grep -n 'HTTP_HOST\|\$1' usaremcasode80-443.htaccess
-  ```
+- **Arquivo:** `usaremcasode80-443.htaccess:1`
+- **Evidência:** a regra antiga redirecionava qualquer URL para a raiz do domínio.
+- **Mudança:** a regra preserva `%{REQUEST_URI}` e usa o domínio canônico existente. O arquivo mantém o nome de exemplo e não é ativado automaticamente.
+- **Aceite:** o destino inclui o caminho solicitado; o domínio deve ser ajustado se o host de publicação mudar.
+- **Verificação:** conferir a regra `RewriteRule` e a nota de ativação no arquivo.
 
----
+### BUG-03 · Seleção e carregamento do vídeo · [P2] — concluído
 
-## 5. Qualidade: testes
+- **Arquivo:** `main/script.js:1`
+- **Evidência:** a versão anterior tentava acessar elementos inexistentes ao selecionar a opção inicial e chamava `document.refresh()`, que não existe.
+- **Mudança:** a seleção agora trata ausência de título, mostra apenas a lista escolhida, atualiza a fonte do vídeo e configura legendas quando disponíveis. jQuery e o JS de demonstração do Plyr foram removidos.
+- **Aceite:** as páginas de Hannibal e Matrix usam os controles nativos do navegador sem chamar `document.refresh()`.
+- **Verificação:** conferir as referências a `setSrc`, `player.load()` e ao estado `hidden` nas páginas e no script.
 
-### TEST-01 · Sem validação de HTML nem link-check · [P2]
+### UX-01 · Player genérico · [P2] — concluído
 
-- **Arquivo:** *(ausente)* CI/validação
-- **Evidência:** nenhuma checagem; páginas com HTML de 2014 sem tooling.
-- **Impacto:** links quebrados (CDN morto do `SEC-01` passou anos) e HTML inválido sem sinal.
-- **Mudança:** CI com `html-validate` (ou W3C API) + `lychee`/`markdown-link-check` para links externos.
-- **Aceite:** CI acusa link morto.
-- **Verificação:**
-  ```bash
-  npx html-validate index.html 2>&1 | tail -3
-  ```
+- **Arquivo:** `video.html:1`
+- **Evidência:** a página anterior não tinha fonte selecionável, apontava para `back.css` ausente e carregava o script de demonstração do Plyr.
+- **Mudança:** adicionados seletor de arquivo local, estado acessível, controles nativos, feedback de formato não suportado e liberação da URL temporária.
+- **Aceite:** a página permite selecionar um vídeo local sem upload.
+- **Verificação:** conferir o `input[type=file]`, `URL.createObjectURL` e `URL.revokeObjectURL`.
 
----
+## 5. Qualidade
+
+### TEST-01 · Validação automática de HTML e links · [P2] — pendente
+
+- **Arquivo:** ferramenta de validação ainda não configurada.
+- **Evidência:** o projeto não possui validação automática.
+- **Mudança planejada:** adotar validação de HTML e links externos.
+- **Aceite:** a validação documentada aponta erros e links quebrados.
+- **Verificação planejada:** definir após escolher e configurar as ferramentas.
 
 ## 6. DevOps / Infra
 
-### DEVOPS-01 · Sem CI · [P2]
+### DEVOPS-01 · CI · [P2] — pendente
 
-- **Arquivo:** *(ausente)* `.github/workflows/`
-- **Evidência:** nenhum workflow.
-- **Impacto:** `SEC-01` (CDN morto) é exatamente o que um link-check automático pegaria.
-- **Mudança:** workflow com link-check + html-validate (junto com `TEST-01`).
-- **Aceite:** PR com link morto é bloqueado.
-- **Verificação:**
-  ```bash
-  ls .github/workflows/
-  ```
-
----
+- **Arquivo:** `.github/workflows/` ainda não existe.
+- **Evidência:** não há workflow de validação.
+- **Mudança planejada:** adicionar workflow estático depois de definir a validação do TEST-01.
+- **Aceite:** mudanças propostas passam pela validação automática.
+- **Verificação planejada:** conferir o workflow após sua implementação.
 
 ## 7. Documentação
 
-### DOC-01 · README sem inventário do que é órfão · [P3]
+### DOC-01 · Instruções e inventário · [P3] — concluído
 
-- **Arquivo:** `Readme.md`
-- **Evidência:** README descreve o site; não lista que `jquery.min.js` local, `bootstrap/`, `tsconfig.json` e os shims são resíduos.
-- **Impacto:** quem herda o repo não sabe o que pode apagar com segurança.
-- **Mudança:** seção "Inventário" (usado vs órfão) após executar `SEC-02`/`BUG-01`.
-- **Aceite:** tabela usados/órfãos confere com a árvore.
-- **Verificação:**
-  ```bash
-  grep -ni 'órfão\|inventário' Readme.md
-  ```
+- **Arquivo:** `Readme.md:1`
+- **Evidência:** a documentação anterior listava dependências que não eram carregadas e um player genérico vazio.
+- **Mudança:** README reescrito com páginas, arquivos, execução local, dependência das mídias externas e itens para revisar antes de publicar.
+- **Aceite:** o README descreve os arquivos e o comportamento atual.
+- **Verificação:** comparar a árvore com as seções “Páginas” e “Arquivos principais”.
 
-### IMP-01 · Shims IE e holder.js em produção · [P3]
+### IMP-01 · Shims e plugins legados sem uso · [P3] — concluído
 
-- **Arquivo:** `index.html` (linhas 17-18 — junto com `SEC-01`), `assets/js/holder.min.js`, `ie-emulation-modes-warning.js`, `ie10-viewport-bug-workaround.js`
-- **Evidência:** shims para IE8-10 e placeholder de imagens (holder) — utilitários de dev da era Bootstrap.
-- **Impacto:** peso morto; verifique por grep quais páginas os referenciam antes de apagar (o `SEC-01` já remove os de CDN).
-- **Mudança:** grep de referência → remover não referenciados.
-- **Aceite:** só assets carregados na árvore.
-- **Verificação:**
-  ```bash
-  grep -rln 'holder.min\|ie-emulation' . --include='*.html' || echo "nao referenciados"
-  ```
+- **Arquivo:** antigos `assets/` e `bootstrap/`
+- **Evidência:** os scripts e estilos do template antigo não eram usados pelas páginas finais.
+- **Mudança:** removidos após tirar as referências do HTML e substituir a interação por código nativo.
+- **Aceite:** nenhum asset legado permanece referenciado.
+- **Verificação:** usar o comando de referência do SEC-02.
 
----
+## 8. Ordem e execução
 
-## 8. Ordem de execução (waves)
+1. SEC-01: remoção do CDN legado.
+2. SEC-02 e IMP-01: remoção de dependências após substituir as páginas.
+3. BUG-01, BUG-02, BUG-03 e UX-01: configuração órfã, URLs, seleção e player.
+4. DOC-01: instruções atualizadas.
+5. TEST-01 e DEVOPS-01 permanecem como próximos itens.
 
-### Wave 1 — Rede (P1)
-1. **`SEC-01`** — matar CDN morto.
-
-### Wave 2 — Limpeza (P2)
-2. **`SEC-02`** — apagar jQuery/Bootstrap órfãos (só depois do grep de confirmação).
-3. **`BUG-01`** + **`BUG-02`** — tsconfig e .htaccess.
-4. **`TEST-01`** + **`DEVOPS-01`** — link-check + CI.
-
-### Wave 3 — Doc (P3)
-5. **`DOC-01`** · **`IMP-01`**.
-
-**Dependências:** `IMP-01` junto do `SEC-01` (mesmas tags) · `DOC-01` por último (inventário só faz sentido depois da limpeza).
-
----
-
-## 9. Fora de escopo / riscos
+## 9. Fora de escopo e decisões preservadas
 
 | Item | Decisão | Motivo |
 |---|---|---|
-| Migrar para React/Next | **Não** | Site estático é adequado ao conteúdo. |
-| Atualizar Bootstrap usado nas páginas | **N/A hoje** | Bootstrap não é referenciado — será removido, não atualizado. |
-| Trocar Google Analytics | **Decisão do dono** | GA inline em `index.html:88-103` — privacidade/LGPD é escolha de produto. |
-| Subir jQuery local (1.11.3) para as páginas | **Nunca** | CDN 3.5.1 já é o que as páginas usam; 1.11.3 tem CVEs. |
+| Migrar para framework | Não | O site é estático e não precisa de build. |
+| Incluir as mídias no Git | Não | Vídeos externos não fazem parte deste repositório. |
+| Trocar o Google Analytics | Revisão do responsável | Identificador legado preservado por ser uma decisão de medição e privacidade. |
+| Alterar o telefone do WhatsApp | Revisão do responsável | O número existente foi preservado e documentado. |
+| TEST-01 e DEVOPS-01 | Pendentes | A validação e a CI não foram adicionadas nesta execução. |
 
-**Riscos:** apagar `bootstrap/`/jquery local sem grep final pode quebrar página não órfã — rodar o grep do `SEC-02` antes do `rm`.
+## 10. Definição de pronto
 
----
-
-## 10. Definição de pronto (DoD)
-
-**Segurança**
-- [ ] `SEC-01` — zero `oss.maxcdn.com`
-- [ ] `SEC-02` — jQuery 1.11.3 e Bootstrap 3.3.5 removidos (sem referência quebrada)
-
-**Bugs**
-- [ ] `BUG-01` — sem tsconfig órfão
-- [ ] `BUG-02` — redirect mantém path + host correto
-
-**Qualidade/infra/doc**
-- [ ] `TEST-01` — html-validate + link-check rodando
-- [ ] `DEVOPS-01` — CI no ar
-- [ ] `DOC-01` — inventário no README
-- [ ] `IMP-01` — shims mortos removidos
-
-**Validação final:**
-```bash
-grep -rn 'oss.maxcdn\|jquery.min.js\|css/bootstrap' . --include='*.html' || echo OK
-find . -name '*.ts' -not -path './.vscode/*' | wc -l
-npx html-validate index.html 2>&1 | tail -3
-```
-
----
-
-*Fim do plano. Gerado por leitura direta do código em 2026-10-05. Nenhum item já estava corrigido — todos apontam para defeitos ainda presentes.*
+- [x] SEC-01 — shims de CDN removidos.
+- [x] SEC-02 — bibliotecas sem uso removidas após revisão das referências.
+- [x] BUG-01 — `tsconfig.json` removido.
+- [x] BUG-02 — redirecionamento preserva o caminho.
+- [x] BUG-03 — lista e player corrigidos.
+- [x] UX-01 — player genérico seleciona arquivo local.
+- [ ] TEST-01 — validação HTML/links pendente.
+- [ ] DEVOPS-01 — CI pendente.
+- [x] DOC-01 — README atualizado.
+- [x] IMP-01 — assets antigos removidos.

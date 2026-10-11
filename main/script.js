@@ -1,28 +1,49 @@
-$(document).ready(function () {
+const selector = document.getElementById('select');
+const content = document.getElementById('content');
 
-  $('#select').on('change', function () {
-    var selectValor = $(this).val();
-    $('#content').children('div').hide();
-    if (document.getElementById(selectValor).style.display === 'none') {
-      document.getElementById(selectValor).style.display = 'grid';
-      document.getElementById('content').style.display = 'grid';
-      $('#content').show();
-    }
-    else {
-      document.getElementById(selectValor).style.display = 'none';
-    }
+if (selector && content) {
+  selector.addEventListener('change', () => {
+    const selectedPanel = Array.from(content.querySelectorAll('.data'))
+      .find((panel) => panel.id === selector.value);
+    const isPanel = Boolean(selectedPanel);
 
+    content.querySelectorAll('.data').forEach((panel) => {
+      panel.hidden = true;
+    });
+    content.hidden = !isPanel;
+
+    if (isPanel) {
+      selectedPanel.hidden = false;
+    }
   });
-
-
-});
-
-function setSrc(src) {
-  document.getElementById('player').src=src;
-  document.refresh();
 }
-function setSrc(src,leg) {
-  document.getElementById('player').src=src;
-  document.getElementById('legenda').src=leg;
-  document.refresh();
-}
+
+window.setSrc = (src, captionSrc) => {
+  const player = document.getElementById('player');
+  if (!player || !src) return;
+
+  const status = document.getElementById('player-status');
+  if (status) {
+    player.onerror = () => {
+      status.textContent = 'Não foi possível carregar este vídeo. Verifique a conexão e o endereço da mídia.';
+    };
+  }
+
+  player.src = new URL(src, document.baseURI).href;
+  player.load();
+
+  const captionTrack = document.getElementById('legenda');
+  if (captionTrack) {
+    if (captionSrc) {
+      captionTrack.src = new URL(captionSrc, document.baseURI).href;
+      captionTrack.default = true;
+    } else {
+      captionTrack.removeAttribute('src');
+      captionTrack.default = false;
+    }
+  }
+
+  if (status) {
+    status.textContent = 'Título selecionado. Use os controles do vídeo para reproduzir.';
+  }
+};

@@ -1,19 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
   <head>
-    <meta charset="UTF-8" />
-    <title>Top-Secret</title>
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Escolha um título para abrir a página de filmes ou séries." />
+    <meta name="theme-color" content="#101828" />
+    <title>Filmes e séries | Francos Corporation</title>
     <link rel="stylesheet" href="sss.css" />
   </head> 
-      <body>
-        <div class="metadeFundoEsquerda">
-          <div class="ColunaEsquerda">
-            <h1>Selecione a Serie ou o Filme</h1>
-            <a class="links" href="../Hannibal/Hannibal.html">Hannibal</a>
-            <a class="links" href="../MatrixTrilogia/Matrix.html">Trilogia Matrix</a>
-            </div>
-          </div>
-      </body>
-    </html>
+  <body>
+    <a class="skip-link" href="#catalogo">Pular para o catálogo</a>
+    <main class="catalog" id="catalogo">
+      <a class="back-link" href="../index.html">← Voltar ao início</a>
+      <p class="eyebrow">Francos Corporation</p>
+      <h1>O que você quer assistir?</h1>
+      <p class="intro">Escolha uma página para ver os títulos disponíveis.</p>
+      <div class="title-grid">
+        <a class="title-card" href="../Hannibal/Hannibal.html">
+          <span class="title-card-icon" aria-hidden="true">S</span>
+          <span>
+            <strong>Hannibal</strong>
+            <small>Série · 3 temporadas</small>
+          </span>
+          <span class="card-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="title-card" href="../MatrixTrilogia/Matrix.html">
+          <span class="title-card-icon" aria-hidden="true">M</span>
+          <span>
+            <strong>Trilogia Matrix</strong>
+            <small>Filmes · 3 títulos</small>
+          </span>
+          <span class="card-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </main>
+    <footer class="catalog-footer">© 2026 Francos Corporation</footer>
+  </body>
+</html>
 

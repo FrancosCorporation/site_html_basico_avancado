@@ -1,5 +1,6 @@
+# Trecho de configuração para Apache 2.4. Este arquivo tem nome de exemplo e
+# não é carregado automaticamente; renomeie para .htaccess apenas no host certo.
 RewriteEngine On
 
-RewriteCond %{SERVER_PORT} 80
-
-RewriteRule ^(.*)$ https://francoscorp.sytes.net/ [R,L]
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://francoscorp.sytes.net%{REQUEST_URI} [R=301,L,NE]

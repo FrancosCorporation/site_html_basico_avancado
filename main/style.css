@@ -1,54 +1,177 @@
-.metadeFundoEsquerda {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #eff4ff;
+  background: #0b1220;
+  --panel: #111c2b;
+  --line: #2b3a4e;
+  --muted: #aab6cb;
+  --accent: #73e0c1;
 }
-h1{
-  font-size: 2rem;
+
+* {
+  box-sizing: border-box;
 }
-.ColunaEsquerda {
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  width: 30vw;
-}
-#voltar{
-  position: absolute;
-  margin-left: 5px;
-  margin-top: 40vh;
-  align-self: center;
-  height: 70px;
-  background-color: chocolate;
-  color: aliceblue;
-}
-.container2 {
-  width: 70vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #000000;
-}
-select {
-  font-size: 20px;
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
- 
-}
-#content{
-  display: none;
-  padding-top: 5%;
-  justify-content: stretch;
-  align-items: flex-start;
-  height: 70vh;
-}
+
 body {
-  margin-left: 0%;
-  margin-top: 0%;
-  margin-bottom: 0%;
-  margin-right: 0%;
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: radial-gradient(ellipse at 20% 0%, #183142 0%, transparent 50%), #0b1220;
 }
-button{
-  margin-top: 20px;
-  font-size: 20px;
+
+button,
+select {
+  font: inherit;
+}
+
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+video:focus-visible {
+  outline: 3px solid #ffca68;
+  outline-offset: 3px;
+}
+
+.metadeFundoEsquerda {
+  display: grid;
+  grid-template-columns: minmax(250px, 330px) minmax(0, 1fr);
+  gap: clamp(1.25rem, 4vw, 3.5rem);
+  width: min(1380px, calc(100% - 2rem));
+  min-height: 100vh;
+  align-items: start;
+  margin: 0 auto;
+  padding: clamp(1.25rem, 4vw, 3rem) 0;
+}
+
+.ColunaEsquerda {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.8rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: rgba(17, 28, 43, 0.92);
+}
+
+.ColunaEsquerda h1 {
+  margin: 0.4rem 0 0.8rem;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+#voltar {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0.6rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+
+#voltar:hover {
+  color: var(--accent);
+}
+
+.select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #526177;
+  border-radius: 0.65rem;
+  background: #0b1220;
+  color: #fff;
+}
+
+#content {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.data {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.data[hidden],
+#content[hidden] {
+  display: none;
+}
+
+.data button {
+  min-height: 44px;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  background: #18283b;
+  color: #eff4ff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.data button:hover {
+  border-color: #5ba991;
+  background: #20364a;
+}
+
+.container2 {
+  display: flex;
+  min-width: 0;
+  min-height: min(74vh, 720px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: clamp(0.8rem, 2vw, 1.5rem);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: #05080d;
+}
+
+.container2 video {
+  display: block;
+  width: 100%;
+  max-height: 72vh;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5rem;
+  background: #000;
+  object-fit: contain;
+}
+
+#player-status {
+  width: 100%;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .metadeFundoEsquerda {
+    grid-template-columns: 1fr;
+    width: min(100% - 1.25rem, 620px);
+  }
+
+  .container2 {
+    min-height: 0;
+  }
+
+  .container2 video {
+    max-height: 64vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
 }
