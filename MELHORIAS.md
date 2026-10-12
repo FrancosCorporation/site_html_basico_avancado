@@ -29,7 +29,7 @@ As páginas de Hannibal e Matrix ainda dependem das URLs de mídia externas grav
 | BUG-03 | Corrigir seleção e carregamento dos players | P2 | `main/script.js`, páginas de título | Concluído |
 | UX-01 | Tornar o player genérico utilizável | P2 | `video.html`, `video-player.js`, `video.css` | Concluído |
 | TEST-01 | Validar HTML e links locais estaticamente | P2 | `.github/workflows/ci.yml` | Concluído como lint/validação; sem testes comportamentais |
-| DEVOPS-01 | Adicionar CI estática | P2 | `.github/workflows/ci.yml` | Implementada; CI remota pendente |
+| DEVOPS-01 | Adicionar CI estática | P2 | `.github/workflows/ci.yml` | CI `38199081250` verde |
 | DOC-01 | Atualizar inventário e instruções | P3 | `Readme.md` | Concluído |
 | IMP-01 | Remover shims e plugins sem uso | P3 | `assets/`, `bootstrap/` | Concluído |
 
@@ -157,7 +157,7 @@ As páginas de Hannibal e Matrix ainda dependem das URLs de mídia externas grav
 - [x] BUG-03 — lista e player corrigidos.
 - [x] UX-01 — player genérico seleciona arquivo local.
 - [x] TEST-01 — lint HTML e checagem offline de links locais; sem suíte comportamental.
-- [x] DEVOPS-01 — CI estática versionada; resultado remoto a registrar na seção 11.
+- [x] DEVOPS-01 — CI estática versionada; run `38199081250` verde.
 - [x] DOC-01 — README atualizado.
 - [x] IMP-01 — assets antigos removidos.
 
@@ -166,6 +166,6 @@ As páginas de Hannibal e Matrix ainda dependem das URLs de mídia externas grav
 | ID | Resultado |
 |---|---|
 | TEST-01 | `html-validate@11.16.2` sem erros; lychee offline reportou 26 links locais OK e zero erros. Nenhum teste comportamental foi criado/executado. |
-| DEVOPS-01 | `.github/workflows/ci.yml` valida HTML e links locais em push/PR; run remoto será registrado após push. |
+| DEVOPS-01 | `.github/workflows/ci.yml` valida HTML e links locais em push/PR; run `38199081250` verde. |
 
 Correções encontradas pelo lint: IDs de temporada agora usam `temporada-1/2/3` alinhados aos `value` do seletor; botões explicitam `type="button"`; legenda usa um arquivo WebVTT vazio válido como estado inicial; markup HTML segue a sintaxe canônica.
