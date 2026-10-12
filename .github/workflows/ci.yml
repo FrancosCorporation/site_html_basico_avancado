@@ -1,0 +1,37 @@
+name: Static site checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-site:
+    name: Validate HTML and local links
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Validate HTML
+        run: >-
+          npx --yes html-validate@11.16.2
+          index.html video.html HomeFilmes/homeFilmes.html
+          Hannibal/Hannibal.html MatrixTrilogia/Matrix.html
+
+      - name: Check local links
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --offline --include-fragments --no-progress './**/*.html' './Readme.md'

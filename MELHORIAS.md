@@ -1,8 +1,8 @@
 # MELHORIAS — site_html_basico_avancado
 
-> Revisado em 2026-10-11 · HTML/CSS/JavaScript estático · branch `master` · sem build.
+> Revisado em 2026-10-11 e reauditado em 2026-10-12 · HTML/CSS/JavaScript estático · branch `master` · sem build.
 > Implementação concluída para SEC-01/02/03, BUG-01/02/03, UX-01, DOC-01 e IMP-01.
-> TEST-01 e DEVOPS-01 continuam pendentes.
+> Validação estática de HTML/links locais e CI foram adicionadas em 2026-10-12; nenhum teste comportamental foi adicionado ou executado.
 
 ## 0. Como usar este documento
 
@@ -28,8 +28,8 @@ As páginas de Hannibal e Matrix ainda dependem das URLs de mídia externas grav
 | BUG-02 | Preservar caminho na regra Apache | P2 | `usaremcasode80-443.htaccess` | Concluído |
 | BUG-03 | Corrigir seleção e carregamento dos players | P2 | `main/script.js`, páginas de título | Concluído |
 | UX-01 | Tornar o player genérico utilizável | P2 | `video.html`, `video-player.js`, `video.css` | Concluído |
-| TEST-01 | Validar HTML e links | P2 | — | Pendente |
-| DEVOPS-01 | Adicionar CI | P2 | `.github/workflows/` | Pendente |
+| TEST-01 | Validar HTML e links locais estaticamente | P2 | `.github/workflows/ci.yml` | Concluído como lint/validação; sem testes comportamentais |
+| DEVOPS-01 | Adicionar CI estática | P2 | `.github/workflows/ci.yml` | Implementada; CI remota pendente |
 | DOC-01 | Atualizar inventário e instruções | P3 | `Readme.md` | Concluído |
 | IMP-01 | Remover shims e plugins sem uso | P3 | `assets/`, `bootstrap/` | Concluído |
 
@@ -96,23 +96,20 @@ As páginas de Hannibal e Matrix ainda dependem das URLs de mídia externas grav
 
 ## 5. Qualidade
 
-### TEST-01 · Validação automática de HTML e links · [P2] — pendente
+### TEST-01 · Validação estática de HTML e links locais · [P2] — concluído
 
-- **Arquivo:** ferramenta de validação ainda não configurada.
-- **Evidência:** o projeto não possui validação automática.
-- **Mudança planejada:** adotar validação de HTML e links externos.
-- **Aceite:** a validação documentada aponta erros e links quebrados.
-- **Verificação planejada:** definir após escolher e configurar as ferramentas.
+- **HTML:** `html-validate@11.16.2` valida as cinco páginas HTML versionadas. Foram corrigidos IDs de temporada com espaços, botões sem `type`, markup de elementos vazios e a trilha sem `src`.
+- **Links:** lychee valida caminhos locais e fragmentos em modo `--offline`; URLs externas de mídia, WhatsApp e analytics não são requisitadas.
+- **Limite:** nenhuma suíte ou teste comportamental foi criado/executado. A checagem é lint estático e integridade de links locais.
+- **Aceite:** validador HTML e checagem offline de links passam na CI.
 
 ## 6. DevOps / Infra
 
-### DEVOPS-01 · CI · [P2] — pendente
+### DEVOPS-01 · CI estática · [P2]
 
-- **Arquivo:** `.github/workflows/` ainda não existe.
-- **Evidência:** não há workflow de validação.
-- **Mudança planejada:** adicionar workflow estático depois de definir a validação do TEST-01.
-- **Aceite:** mudanças propostas passam pela validação automática.
-- **Verificação planejada:** conferir o workflow após sua implementação.
+- **Arquivo:** `.github/workflows/ci.yml`.
+- **Cobertura:** valida HTML e links locais em push e pull request, sem permissões de escrita.
+- **Aceite:** o workflow remoto fica verde; não inicia serviços nem executa testes comportamentais.
 
 ## 7. Documentação
 
@@ -138,7 +135,7 @@ As páginas de Hannibal e Matrix ainda dependem das URLs de mídia externas grav
 2. SEC-02 e IMP-01: remoção de dependências após substituir as páginas.
 3. BUG-01, BUG-02, BUG-03 e UX-01: configuração órfã, URLs, seleção e player.
 4. DOC-01: instruções atualizadas.
-5. TEST-01 e DEVOPS-01 permanecem como próximos itens.
+5. TEST-01 (lint estático de HTML/links locais) e DEVOPS-01 (CI) foram concluídos. Testes comportamentais continuam fora desta rodada.
 
 ## 9. Fora de escopo e decisões preservadas
 
@@ -148,7 +145,7 @@ As páginas de Hannibal e Matrix ainda dependem das URLs de mídia externas grav
 | Incluir as mídias no Git | Não | Vídeos externos não fazem parte deste repositório. |
 | Trocar o Google Analytics | Revisão do responsável | Identificador legado preservado por ser uma decisão de medição e privacidade. |
 | Alterar o telefone do WhatsApp | Revisão do responsável | O número existente foi preservado e documentado. |
-| TEST-01 e DEVOPS-01 | Pendentes | A validação e a CI não foram adicionadas nesta execução. |
+| URLs externas de mídia | Revisão operacional | As mídias não estão no repositório e links externos não são consultados pela CI offline. |
 
 ## 10. Definição de pronto
 
@@ -159,7 +156,16 @@ As páginas de Hannibal e Matrix ainda dependem das URLs de mídia externas grav
 - [x] BUG-02 — redirecionamento preserva o caminho.
 - [x] BUG-03 — lista e player corrigidos.
 - [x] UX-01 — player genérico seleciona arquivo local.
-- [ ] TEST-01 — validação HTML/links pendente.
-- [ ] DEVOPS-01 — CI pendente.
+- [x] TEST-01 — lint HTML e checagem offline de links locais; sem suíte comportamental.
+- [x] DEVOPS-01 — CI estática versionada; resultado remoto a registrar na seção 11.
 - [x] DOC-01 — README atualizado.
 - [x] IMP-01 — assets antigos removidos.
+
+## 11. Registro de execução — 2026-10-12
+
+| ID | Resultado |
+|---|---|
+| TEST-01 | `html-validate@11.16.2` sem erros; lychee offline reportou 26 links locais OK e zero erros. Nenhum teste comportamental foi criado/executado. |
+| DEVOPS-01 | `.github/workflows/ci.yml` valida HTML e links locais em push/PR; run remoto será registrado após push. |
+
+Correções encontradas pelo lint: IDs de temporada agora usam `temporada-1/2/3` alinhados aos `value` do seletor; botões explicitam `type="button"`; legenda usa um arquivo WebVTT vazio válido como estado inicial; markup HTML segue a sintaxe canônica.

@@ -49,6 +49,18 @@ Os vídeos não estão versionados neste repositório. As páginas de Hannibal e
 
 `usaremcasode80-443.htaccess` é um exemplo e não é carregado pelo Apache com esse nome. Ajuste o domínio de destino antes de renomeá-lo para `.htaccess` em um servidor.
 
+## Validação estática
+
+Para validar a sintaxe das páginas HTML:
+
+```bash
+npx --yes html-validate@11.16.2 index.html video.html HomeFilmes/homeFilmes.html Hannibal/Hannibal.html MatrixTrilogia/Matrix.html
+```
+
+A CI também verifica links locais e fragmentos HTML em modo offline. Links para
+WhatsApp, analytics e arquivos de mídia externos dependem dos serviços de
+terceiros e não são verificados automaticamente.
+
 ## Revisão antes de publicar
 
 - O link do WhatsApp contém um número de telefone público; confirme que continua sendo o contato correto.
